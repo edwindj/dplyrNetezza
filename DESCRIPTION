@@ -1,0 +1,27 @@
+Package: dplyrNetezza
+Type: Package
+Title: Extends dplyr to use JDBC SQL drivers.
+Version: 0.1
+Author: as.person(c("Chapman Siu <chpmn.siu@gmail.com> [aut, cre]",
+    "dplyrJDBC, Jim Hester <james.f.hester@gmail.com> [aut]"))
+Maintainer: Chapman Siu <chpmn.siu@gmail.com>
+Description: Extension package for dplyr for Netezza Drivers. This package is
+    a Netezza fork for dplyJDBC which will has grown to become a
+    standalone project.
+URL: https://github.com/chappers/dplyrNetezza
+Roxygen: list(wrap = FALSE)
+Depends:
+    R (>= 3.0.2),
+    dplyr,
+    assertthat,
+    DBI,
+    stringr,
+    RNetezza
+Imports:
+    RJDBC
+Suggests:
+    testthat,
+    knitr
+VignetteBuilder: knitr
+LazyData: yes
+License: MIT + file LICENSE

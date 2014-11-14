@@ -11,14 +11,12 @@ Description: Extension package for dplyr for Netezza Drivers. This package is
 URL: https://github.com/chappers/dplyrNetezza
 Roxygen: list(wrap = FALSE)
 Depends:
-    R (>= 3.0.2),
-    dplyr,
-    assertthat,
-    DBI,
-    stringr,
-    RNetezza
+    R (>= 3.0.2)
 Imports:
-    RJDBC
+    assertthat,
+    RJDBC,
+    dplyr,
+    DBI
 Suggests:
     testthat,
     knitr

@@ -25,5 +25,25 @@ tbl_sql <- function(subclass, src, from, ..., vars = attr(from, "vars")) {
   update(tbl)
 }
 
+#' @export
+update.tbl_sql <- function(object, ...) {
+  args <- list(...)
+  assert_that(only_has_names(args,
+                             c("select", "where", "group_by", "order_by", "summarise")))
+  
+  for (nm in names(args)) {
+    object[[nm]] <- args[[nm]]
+  }
+  
+  # Figure out variables
+  if (is.null(object$select)) {
+    var_names <- db_query_fields(object$src$con, object$from)
+    vars <- lapply(var_names, as.name)
+    object$select <- vars
+  }
+  
+  object$query <- build_query(object)
+  object
+}
 
 

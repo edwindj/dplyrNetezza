@@ -67,6 +67,19 @@ db_table_source.PostgreSQLConnection <- function(con, path, from) {
   from
 }
 
+DbDisconnector <- setRefClass("DbDisconnector",
+  fields = c("con", "name", "quiet"),
+  methods = list(
+    finalize = function() {
+      if (!quiet) {
+        message("Auto-disconnecting ", name, " connection ",
+          "(", paste(get_slot(con, 'Id'), collapse = ", "), ")")
+      }
+      dbDisconnect(con)
+    }
+  )
+)
+
 #' @export
 qry_fields.JDBCConnection <- function(con, from) {
   qry <- dbSendQuery(con, build_sql("SELECT * FROM ", from, " WHERE 0=1;"))

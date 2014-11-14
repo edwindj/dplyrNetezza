@@ -5,47 +5,22 @@ NULL
 #' 
 #' Use \code{src_JDBC} to connect to Netezza database with JDBC driver.
 #' @export
-src_JDBC <- function(driver, dbname = NULL, host = NULL, port = NULL, user = NULL, password = NULL, url = NULL, ...) {
+src_JDBC <- function(driver, url = NULL, user = NULL, password = NULL, ...) {
   if (!require("RJDBC")) {
     stop("RJDBC package required to connect to JDBC db", call. = FALSE)
   }
 
   user <- user %||% ""
 
-  if (is.null(url) && (!is.null(host) && !is.null(port) && !is.null(dbname)))
-  {
-    url_ <- paste0("jdbc:netezza://", host, ":", port, "/", dbname)
-  }
-  else {
-    url_ <- url
-  }
-  
-  con <- DBI:::dbConnect(driver, url = url_ %||% "", user = user %||% "",
+  con <- DBI:::dbConnect(driver, url = url %||% "", user = user %||% "",
     password = password %||% "", ...)
 
   .jcall(con@jc, "V", "setAutoCommit", FALSE)
 
   info <- list(url=url, user=user, driver=.jstrVal(con@jc))
-  if (is.null(url)) {
-    info$dbname <- dbname
-    info$host <- host
-    info$port <- port
-  } 
-  else 
-  {
-    # TODO parse the other information
-    info$dbname <- stringr::str_extract(nz$info$url, "\\w+$") # extract the last "word" in the url string
-  }
 
   src_sql("JDBC", con,
     info = info, disco = dplyr:::db_disconnector(con, "JDBC"))
-}
-
-#' @export
-src_desc.src_JDBC <- function(x) 
-{
-  info <- x$info
-  paste0(info$dbname, " [", info$user, "]")
 }
 
 #' @export
@@ -86,6 +61,8 @@ db_has_table.JDBCConnection <- function(con, table) {
 #' @export
 db_query_fields.JDBCConnection <- function(con, sql, ...)
 {
-  dbListFields(nz$con, sql)
+  rs <- dbSendQuery(con, paste0("SELECT * FROM ", sql))
+  on.exit(dbClearResult(rs))
+  names(fetch(rs, 1L))
 }
 

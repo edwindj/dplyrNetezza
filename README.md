@@ -27,6 +27,15 @@ NZtable <- tbl(nzr, "NZtable")
 
 Normal `plyr` actions should then be able to take place.
 
+n.b. the `NetezzaSQL()` function is as follows:
+
+```R
+NetezzaSQL<-function(){
+  return(JDBC(driverClass="org.netezza.Driver", 
+              classPath=system.file("java", "nzjdbc.jar", package="RNetezzaServer"), "'"))
+}
+```
+
 #Credits
 
 All credit goes to the projects below that inspired and make up parts of dplyrNetezza:
